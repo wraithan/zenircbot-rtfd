@@ -41,7 +41,7 @@ sub.on('message', function(channel, message){
     console.log(msg.type)
     if (msg.version == 1 && msg.type == 'directed_privmsg' &&
         channels.indexOf(msg.data.channel) != -1) {
-
+        var help = /^help(\s.*)?$/.exec(msg.data.message)
         if (/^info$/.test(msg.data.message.trim())) {
             zen.send_privmsg(msg.data.channel,
                              'Welcome to #readthedocs, if you have a ' +
@@ -54,6 +54,12 @@ sub.on('message', function(channel, message){
                              "If you don't get a response please file an " +
                              "issue here: " +
                              "https://github.com/rtfd/readthedocs.org/issues")
+        } else if (help) {
+            zen.send_privmsg(msg.data.channel, "Wraithan: ^")
+            var question = help[1].trim()
+            if (question) {
+                fs.appendFile('./question.log', question + '\n')
+            }
         }
     }
 })
