@@ -1,0 +1,16 @@
+{
+    "author": "Wraithan (http://wraithan.net)",
+    "name": "zenircbot-rtfd",
+    "description": "Scripts for ZenRTDBot in #readthedocs on irc.freenode.net",
+    "version": "0.0.1",
+    "homepage": "http://github.com/wraithan/zenircbot-rtfd",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/wraithan/zenircbot-rtfd.git"
+    },
+    "dependencies": {"Set": "0.4.1",
+                     "zenircbot-api": "~2"},
+    "engines": {
+        "node": "*"
+    }
+}
