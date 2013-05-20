@@ -4,7 +4,6 @@ var api = require('zenircbot-api')
 var Set = require('Set')
 
 var zen = new api.ZenIRCBot()
-var sub = zen.get_redis_client();
 var channels = ['#readthedocs']
 var oncall = new Set()
 var confFile = path.join(__dirname, 'rtfd.json')
@@ -49,8 +48,8 @@ zen.register_commands(
 )
 
 var filtered = zen.filter({version: 1, type: 'directed_privmsg'})
-sub.on('message', function(msg){
-    if (channels.indexOf(msg.data.channel) != -1) {
+filtered.on('data', function(msg) {
+    if (channels.indexOf(msg.data.channel) !== -1) {
         var help = /^help(\s.*)?$/.exec(msg.data.message)
         if (/^info$/.test(msg.data.message)) {
             info.forEach(function (line) {
