@@ -13,6 +13,6 @@
     },
     "dependencies": {
         "Set": "0.4.1",
-        "zenircbot-api": "2.3.0"
+        "zenircbot-api": "2.3.1"
     }
 }
