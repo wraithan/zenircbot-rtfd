@@ -1,23 +1,23 @@
+var path = require('path')
 var fs = require('fs')
-var api = require('zenircbot-api');
+var api = require('zenircbot-api')
 var Set = require('Set')
-var bot_config = api.load_config('../bot.json')
-var zen = new api.ZenIRCBot(bot_config.redis.host,
-                            bot_config.redis.port,
-                            bot_config.redis.db)
+
+var zen = new api.ZenIRCBot()
 var sub = zen.get_redis_client();
 var channels = ['#readthedocs']
 var oncall = new Set()
+var confFile = path.join(__dirname, 'rtfd.json')
 
-fs.exists('./rtfd/rtfd.json', function (exists) {
-    if (exists) {
-        var conf = api.load_config('./rtfd/rtfd.json')
+if (fs.existsSync(confFile)) {
+    var conf = api.load_config(confFile)
+    if (conf.channels) {
         channels = channels.concat(conf.channels)
-        if (conf.oncall) {
-            oncall = oncall.addAll(conf.oncall)
-        }
     }
-})
+    if (conf.oncall) {
+        oncall = oncall.addAll(conf.oncall)
+    }
+}
 
 var info = [
     ('Welcome to #readthedocs, if you have a question please prefix it with ' +
@@ -48,11 +48,9 @@ zen.register_commands(
     ]
 )
 
-sub.subscribe('in');
-sub.on('message', function(channel, message){
-    var msg = JSON.parse(message)
-    if (msg.version == 1 && msg.type == 'directed_privmsg' &&
-        channels.indexOf(msg.data.channel) != -1) {
+var filtered = zen.filter({version: 1, type: 'directed_privmsg'})
+sub.on('message', function(msg){
+    if (channels.indexOf(msg.data.channel) != -1) {
         var help = /^help(\s.*)?$/.exec(msg.data.message)
         if (/^info$/.test(msg.data.message)) {
             info.forEach(function (line) {
