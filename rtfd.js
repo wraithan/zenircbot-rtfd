@@ -71,12 +71,12 @@ filtered.on('data', function(msg) {
             zen.send_privmsg(msg.data.channel,
                              'Added ' + msg.data.sender +
                              'to the oncall list.')
-        } else if (/^offcall$/) {
+        } else if (/^offcall$/.test(msg.data.message)) {
             oncall.remove(msg.data.sender)
             zen.send_privmsg(msg.data.channel,
                              'Removed ' + msg.data.sender +
-                             'from the oncall list.')
-        } else if (/^depth$/) {
+                             ' from the oncall list.')
+        } else if (/^depth$/.test(msg.data.message)) {
             http.get('https://readthedocs.org/depth/', function(res) {
                 res.on('data', function(chunk) {
                     zen.send_privmsg(msg.data.channel,
