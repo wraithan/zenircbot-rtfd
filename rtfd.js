@@ -1,6 +1,6 @@
 var path = require('path')
 var fs = require('fs')
-var http = require('http')
+var http = require('https')
 var api = require('zenircbot-api')
 var Set = require('Set')
 
@@ -70,14 +70,14 @@ filtered.on('data', function(msg) {
             oncall.add(msg.data.sender)
             zen.send_privmsg(msg.data.channel,
                              'Added ' + msg.data.sender +
-                             'to the oncall list.')
+                             ' to the oncall list.')
         } else if (/^offcall$/.test(msg.data.message)) {
             oncall.remove(msg.data.sender)
             zen.send_privmsg(msg.data.channel,
                              'Removed ' + msg.data.sender +
                              ' from the oncall list.')
         } else if (/^depth$/.test(msg.data.message)) {
-            http.get('https://readthedocs.org/depth/', function(res) {
+            https.get('https://readthedocs.org/depth/', function(res) {
                 res.on('data', function(chunk) {
                     zen.send_privmsg(msg.data.channel,
                                      'Queue depth is currently: ' + chunk)
