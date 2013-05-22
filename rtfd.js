@@ -1,6 +1,6 @@
 var path = require('path')
 var fs = require('fs')
-var http = require('https')
+var https = require('https')
 var api = require('zenircbot-api')
 var Set = require('Set')
 
