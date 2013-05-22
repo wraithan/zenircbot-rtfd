@@ -1,5 +1,6 @@
 var path = require('path')
 var fs = require('fs')
+var http = require('http')
 var api = require('zenircbot-api')
 var Set = require('Set')
 
@@ -43,6 +44,9 @@ zen.register_commands(
         }, {
             name: "info",
             description: "Gives basic information about using the commands."
+        }, {
+            name: "depth",
+            description: "Gets the current queue depth."
         }
     ]
 )
@@ -64,8 +68,21 @@ filtered.on('data', function(msg) {
             }
         } else if (/^oncall$/.test(msg.data.message)) {
             oncall.add(msg.data.sender)
+            zen.send_privmsg(msg.data.channel,
+                             'Added ' + msg.data.sender +
+                             'to the oncall list.')
         } else if (/^offcall$/) {
             oncall.remove(msg.data.sender)
+            zen.send_privmsg(msg.data.channel,
+                             'Removed ' + msg.data.sender +
+                             'from the oncall list.')
+        } else if (/^depth$/) {
+            http.get('https://readthedocs.org/depth/', function(res) {
+                res.on('data', function(chunk) {
+                    zen.send_privmsg(msg.data.channel,
+                                     'Queue depth is currently: ' + chunk)
+                })
+            })
         }
     }
 })
